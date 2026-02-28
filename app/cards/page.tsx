@@ -1,5 +1,5 @@
 import { Nav } from "@/components/Nav";
-import Link from "next/link";
+import { CardList } from "@/components/CardList";
 
 export default function CardsPage() {
   return (
@@ -14,14 +14,8 @@ export default function CardsPage() {
           </p>
         </header>
         <Nav />
-        <main className="mt-8 flex flex-col items-center justify-center gap-4 py-16">
-          <p className="text-zinc-500">준비 중입니다.</p>
-          <Link
-            href="/"
-            className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
-          >
-            플래시카드로 돌아가기
-          </Link>
+        <main className="mt-8">
+          <CardList />
         </main>
       </div>
     </div>

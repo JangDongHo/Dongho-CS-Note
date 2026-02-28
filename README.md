@@ -4,6 +4,10 @@ CS 면접 대비 플래시카드 앱 (Next.js + SQLite + Prisma)
 
 <img width="979" height="672" alt="image" src="https://github.com/user-attachments/assets/a879813f-c714-4fd1-927b-32fa30632a98" />
 
+### 왜 플래시카드인가?
+
+CS 면접 준비 시 영상 시청이나 노트만으로는 시간이 지나면 쉽게 잊어버립니다. [John Washam의 글](https://startupnextdoor.com/retaining-computer-science-knowledge/)에 따르면, **간격 반복(Spaced Repetition)** — 학습한 내용을 여러 시점에 나눠 복습하는 것이 지식 유지에 효과적입니다. 플래시카드는 이런 복습을 체계적으로 할 수 있게 해주는 도구입니다.
+
 ### 실행 방법
 
 ```bash

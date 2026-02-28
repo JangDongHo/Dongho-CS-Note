@@ -3,6 +3,12 @@
 import { useEffect, useState } from "react";
 import { FlashCard, type CardData } from "./FlashCard";
 import { CategoryFilter } from "./CategoryFilter";
+import { CardEditModal } from "./CardEditModal";
+
+function truncate(str: string, maxLen: number) {
+  if (str.length <= maxLen) return str;
+  return str.slice(0, maxLen) + "…";
+}
 
 export function FlashCardView() {
   const [categories, setCategories] = useState<string[]>([]);
@@ -10,15 +16,18 @@ export function FlashCardView() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [editingCard, setEditingCard] = useState<CardData | undefined>(
+    undefined
+  );
 
-  useEffect(() => {
+  const fetchCategories = () => {
     fetch("/api/categories")
       .then((res) => res.json())
       .then(setCategories)
       .catch(console.error);
-  }, []);
+  };
 
-  useEffect(() => {
+  const fetchCards = () => {
     setLoading(true);
     const url = category
       ? `/api/cards?category=${encodeURIComponent(category)}`
@@ -31,7 +40,44 @@ export function FlashCardView() {
       })
       .catch(console.error)
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    fetchCards();
   }, [category]);
+
+  const handleEdit = (card: CardData) => setEditingCard(card);
+  const handleCloseModal = () => setEditingCard(undefined);
+  const handleSaved = () => {
+    fetchCategories();
+    fetchCards();
+  };
+
+  const handleDelete = async (card: CardData) => {
+    if (!confirm(`"${truncate(card.question, 30)}" 카드를 삭제하시겠습니까?`)) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/cards/${card.id}`, { method: "DELETE" });
+      if (res.ok) {
+        const oldIndex = cards.findIndex((c) => c.id === card.id);
+        const newCards = cards.filter((c) => c.id !== card.id);
+        setCards(newCards);
+        if (newCards.length > 0) {
+          setIndex(Math.min(oldIndex, newCards.length - 1));
+        }
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "삭제에 실패했습니다.");
+      }
+    } catch {
+      alert("삭제에 실패했습니다.");
+    }
+  };
 
   if (loading && cards.length === 0) {
     return (
@@ -67,7 +113,17 @@ export function FlashCardView() {
         total={cards.length}
         onPrev={() => setIndex((i) => Math.max(0, i - 1))}
         onNext={() => setIndex((i) => Math.min(cards.length - 1, i + 1))}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
+      {editingCard !== undefined && (
+        <CardEditModal
+          card={editingCard}
+          categories={categories}
+          onClose={handleCloseModal}
+          onSaved={handleSaved}
+        />
+      )}
     </div>
   );
 }

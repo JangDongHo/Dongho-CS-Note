@@ -15,9 +15,19 @@ interface FlashCardProps {
   total: number;
   onPrev?: () => void;
   onNext?: () => void;
+  onEdit?: (card: CardData) => void;
+  onDelete?: (card: CardData) => void;
 }
 
-export function FlashCard({ card, index, total, onPrev, onNext }: FlashCardProps) {
+export function FlashCard({
+  card,
+  index,
+  total,
+  onPrev,
+  onNext,
+  onEdit,
+  onDelete,
+}: FlashCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleFlip = () => setIsFlipped((prev) => !prev);
@@ -45,9 +55,39 @@ export function FlashCard({ card, index, total, onPrev, onNext }: FlashCardProps
             className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-zinc-200 bg-white p-8 shadow-lg dark:border-zinc-700 dark:bg-zinc-900"
             style={{ backfaceVisibility: "hidden" }}
           >
-            <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
-              {card.category}
-            </span>
+            <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
+              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                {card.category}
+              </span>
+              {(onEdit || onDelete) && (
+                <div className="flex gap-2">
+                  {onEdit && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(card);
+                      }}
+                      className="rounded border border-zinc-300 px-2 py-1 text-xs font-medium dark:border-zinc-600"
+                    >
+                      수정
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(card);
+                      }}
+                      className="rounded border border-red-300 px-2 py-1 text-xs font-medium text-red-600 dark:border-red-700 dark:text-red-400"
+                    >
+                      삭제
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
             <p className="mt-2 text-center text-lg font-medium text-zinc-800 dark:text-zinc-200">
               {card.question}
             </p>
@@ -62,9 +102,39 @@ export function FlashCard({ card, index, total, onPrev, onNext }: FlashCardProps
               transform: "rotateY(180deg)",
             }}
           >
-            <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
-              {card.category}
-            </span>
+            <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
+              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                {card.category}
+              </span>
+              {(onEdit || onDelete) && (
+                <div className="flex gap-2">
+                  {onEdit && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(card);
+                      }}
+                      className="rounded border border-zinc-300 px-2 py-1 text-xs font-medium dark:border-zinc-600"
+                    >
+                      수정
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(card);
+                      }}
+                      className="rounded border border-red-300 px-2 py-1 text-xs font-medium text-red-600 dark:border-red-700 dark:text-red-400"
+                    >
+                      삭제
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
             <p className="mt-2 text-center text-lg text-zinc-700 dark:text-zinc-300">
               {card.answer || "(답변을 입력해 주세요)"}
             </p>
