@@ -2,6 +2,8 @@
 
 CS 면접 대비 플래시카드 앱 (Next.js + SQLite + Prisma)
 
+<img width="979" height="672" alt="image" src="https://github.com/user-attachments/assets/a879813f-c714-4fd1-927b-32fa30632a98" />
+
 ### 실행 방법
 
 ```bash
