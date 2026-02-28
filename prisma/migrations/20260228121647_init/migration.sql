@@ -1,0 +1,21 @@
+-- CreateTable
+CREATE TABLE "Card" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "question" TEXT NOT NULL,
+    "answer" TEXT NOT NULL DEFAULT '',
+    "category" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Review" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "cardId" INTEGER NOT NULL,
+    "quality" INTEGER NOT NULL,
+    "nextReviewAt" DATETIME NOT NULL,
+    "easeFactor" REAL NOT NULL DEFAULT 2.5,
+    "interval" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Review_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "Card" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);

@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Card {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String   @default("")
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews Review[]
+}
+
+model Review {
+  id           Int      @id @default(autoincrement())
+  cardId       Int
+  card         Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  quality      Int      // 0=Again, 3=Good, 5=Easy
+  nextReviewAt DateTime
+  easeFactor   Float    @default(2.5)
+  interval     Int      @default(0) // days
+  createdAt    DateTime @default(now())
+}
