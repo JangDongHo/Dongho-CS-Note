@@ -27,7 +27,7 @@ export function FlashCardView() {
       .catch(console.error);
   };
 
-  const fetchCards = () => {
+  const fetchCards = (preserveCardId?: number) => {
     setLoading(true);
     const url = category
       ? `/api/cards?category=${encodeURIComponent(category)}`
@@ -36,7 +36,12 @@ export function FlashCardView() {
       .then((res) => res.json())
       .then((data) => {
         setCards(data);
-        setIndex(0);
+        if (preserveCardId !== undefined) {
+          const idx = data.findIndex((c: CardData) => c.id === preserveCardId);
+          setIndex(idx >= 0 ? idx : 0);
+        } else {
+          setIndex(0);
+        }
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -53,8 +58,9 @@ export function FlashCardView() {
   const handleEdit = (card: CardData) => setEditingCard(card);
   const handleCloseModal = () => setEditingCard(undefined);
   const handleSaved = () => {
+    const cardId = editingCard?.id;
     fetchCategories();
-    fetchCards();
+    fetchCards(cardId);
   };
 
   const handleDelete = async (card: CardData) => {
